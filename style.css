@@ -1,0 +1,11 @@
+
+svg path:hover {
+    stroke : black;
+    stroke-width: 3px;
+    fill: rosybrown;
+    pointer-events: all;
+}
+
+svg path#Dobong-gu:hover {
+    fill: rosybrown;
+}
