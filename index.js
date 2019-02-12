@@ -1,4 +1,16 @@
-
+//download the data
+d3.csv("/data/ldhdata_clean.csv", function(room){
+    return{
+        theme : room.themeName,
+        spec_location : room.specific,
+        franchise_id : room.franchise + " " + room.label,
+        overall_score : room.score,
+        difficulty : room.difficulty,
+        completeness : room.completeness
+    }
+}).then(function(data){
+    console.log(data[0]);
+})
 
 //tooltip displays
 var mouselocation;
