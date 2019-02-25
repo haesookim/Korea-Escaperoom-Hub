@@ -1,38 +1,28 @@
 /* Draw the map */
-var mapwidth = 800;
-var mapheight = 600;
+var width = window.innerWidth;
+var height = window.innerHeight;
 
-var svg = d3.select(".map").append("svg")
-    .attr("width", mapwidth)
-    .attr("height", mapheight);
+var svg = d3.select("#map").append("svg")
+    .attr("width", width)
+    .attr("height", height);
 
 var seoulmap = svg.append("g")
     .attr("id", "seoulmap");
 
-var path = d3.geoPath();
+var projection = d3.geoMercator()
+        .center([126.9895, 37.5651]) //lng, lat
+        .scale(60000)
+        .translate([width/2, height/2 - 50]);
 
-d3.json("seoul_municipalities_topo_simple.json", function (error, seoul) {
-    if (error) throw error;
-    var features = topojson.feature(seoul, seoul.objects.seoul_municipalities_geo).features;
+var path = d3.geoPath().projection(projection);
 
+d3.json("data/seoul_municipalities_topo_simple.json", function(error, data) {
+    var features = topojson.feature(data, data.objects.seoul_municipalities_geo).features;
     seoulmap.selectAll("path")
-        .data(features)
-        .enter().append("path")
-        .attr("d", path);
-
-    /*seoulmap.selectAll("path")
-        .data(features)
-        .enter().append("path")
-        .attr("class", function (d) { console.log(); return "municipality c" + d.properties.SIG_ENG_NM })
-        .attr("d", path);
-
-    seoulmap.selectAll("text")
-        .data(features)
-        .enter().append("text")
-        .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
-        .attr("dy", ".35em")
-        .attr("class", "municipality-label")
-        .text(function (d) { return d.properties.SIG_KOR_NM; })*/
+       .data(features)
+       .enter().append("path")
+       .attr("class", function(d) { console.log(); return "municipality c" + d.properties.code })
+       .attr("d", path);
 });
 
 

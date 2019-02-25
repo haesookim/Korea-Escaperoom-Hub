@@ -5,6 +5,15 @@ body{
     font-family: Helvetica;
 }
 
+svg {
+    display: block;
+}
+
+svg .municipality {
+    fill: #cdcdcd;
+    stroke: #fff;
+  }
+
 svg path:hover {
     stroke : black;
     stroke-width: 5px;
