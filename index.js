@@ -1,5 +1,5 @@
 /* Draw the map */
-var width = window.innerWidth;
+var width = window.innerWidth/2;
 var height = window.innerHeight;
 
 var svg = d3.select("#map").append("svg")
@@ -7,7 +7,8 @@ var svg = d3.select("#map").append("svg")
     .attr("height", height);
 
 var seoulmap = svg.append("g")
-    .attr("id", "seoulmap");
+    .attr("id", "seoulmap")
+    .attr("class", "map");
 
 var projection = d3.geoMercator()
         .center([126.9895, 37.5651]) //lng, lat
@@ -21,7 +22,8 @@ d3.json("data/seoul_municipalities_topo_simple.json", function(error, data) {
     seoulmap.selectAll("path")
        .data(features)
        .enter().append("path")
-       .attr("class", function(d) { console.log(); return "municipality c" + d.properties.code })
+       .attr("class", function(d) { console.log(); return "municipality c" + d.properties.SIG_CD })
+       .attr("id", function(d) {return d.properties.SIG_KOR_NM})
        .attr("d", path);
 });
 
@@ -37,35 +39,24 @@ var fulldata = d3.csv("/data/ldhdata_clean.csv", function (room) {
         difficulty: +room.difficulty,
         completeness: +room.completeness
     }
-}).then(function (data) {
-    var count = d3.nest()
-        .key(function (room) { return room.spec_location; })
-        .rollup(function (room_group) {
-            return room_group.length;
-        }).entries(data);
 });
 
 var seouldata = d3.csv("/data/seoul-data.csv", function (city) {
     return +city.number;
 })
 
-seouldata.then(function () {
-
-    var colorScale = d3.scaleThreshold()
+var colorScale = d3.scaleThreshold()
         .domain([10, 20, 30, 40, 50])
         .range(["#D3DEF8", "#acb8d8", "#8593b9", "#5e6d99", "#37487a", "#10235b"]);
-
-})
 
 //tooltip displays
 var mouselocation;
 var tooltip = d3.select(".tooltip");
-var mappath = d3.selectAll(".map").selectAll("path");
+var mappath = d3.select(".map"); /* need to fix */
 
 mappath.on('mouseenter', function () {
     tooltip.style('display', 'block');
     let textID = this.id;
-    let locinfo;
     tooltip.select(".tooltip-city")
         .html("<strong>" + textID + "</strong></br>");
 
