@@ -52,7 +52,7 @@ var colorScale = d3.scaleThreshold()
 //tooltip displays
 var mouselocation;
 var tooltip = d3.select(".tooltip");
-var mappath = d3.select(".map"); /* need to fix */
+var mappath = seoulmap.selectAll("path"); /* need to fix */
 
 mappath.on('mouseenter', function () {
     tooltip.style('display', 'block');
@@ -61,7 +61,7 @@ mappath.on('mouseenter', function () {
         .html("<strong>" + textID + "</strong></br>");
 
     tooltip.select(".tooltip-num")
-        .html("# of Themes Visited: ");
+        .html("# of Themes: ");
 }).on('mousemove', function () {
     mouselocation = d3.mouse(d3.select('body').node());
     /* 
