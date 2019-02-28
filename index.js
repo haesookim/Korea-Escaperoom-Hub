@@ -1,6 +1,7 @@
 /* Draw the map */
-var width = window.innerWidth/2;
+var width = window.innerWidth / 2;
 var height = window.innerHeight;
+var mappath;
 
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
@@ -11,20 +12,20 @@ var seoulmap = svg.append("g")
     .attr("class", "map");
 
 var projection = d3.geoMercator()
-        .center([126.9895, 37.5651]) //lng, lat
-        .scale(60000)
-        .translate([width/2, height/2 - 50]);
+    .center([126.9895, 37.5651]) //lng, lat
+    .scale(60000)
+    .translate([width / 2, height / 2 - 50]);
 
 var path = d3.geoPath().projection(projection);
 
-d3.json("data/seoul_municipalities_topo_simple.json", function(error, data) {
+var loadmap = d3.json("data/seoul_municipalities_topo_simple.json", function (error, data) {
     var features = topojson.feature(data, data.objects.seoul_municipalities_geo).features;
     seoulmap.selectAll("path")
-       .data(features)
-       .enter().append("path")
-       .attr("class", function(d) { console.log(); return "municipality c" + d.properties.SIG_CD })
-       .attr("id", function(d) {return d.properties.SIG_KOR_NM})
-       .attr("d", path);
+        .data(features)
+        .enter().append("path")
+        .attr("class", function (d) { console.log(); return "municipality c" + d.properties.SIG_CD })
+        .attr("id", function (d) { return d.properties.SIG_KOR_NM })
+        .attr("d", path);
 });
 
 
@@ -46,13 +47,16 @@ var seouldata = d3.csv("/data/seoul-data.csv", function (city) {
 })
 
 var colorScale = d3.scaleThreshold()
-        .domain([10, 20, 30, 40, 50])
-        .range(["#D3DEF8", "#acb8d8", "#8593b9", "#5e6d99", "#37487a", "#10235b"]);
+    .domain([10, 20, 30, 40, 50])
+    .range(["#D3DEF8", "#acb8d8", "#8593b9", "#5e6d99", "#37487a", "#10235b"]);
 
 //tooltip displays
 var mouselocation;
 var tooltip = d3.select(".tooltip");
-var mappath = seoulmap.selectAll("path"); /* need to fix */
+/* need to fix */
+tooltip (function(loadmap) {
+    var mappath = d3.selectAll("path");
+});
 
 mappath.on('mouseenter', function () {
     tooltip.style('display', 'block');
